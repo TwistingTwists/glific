@@ -48,7 +48,11 @@ defmodule GlificWeb.Router do
     plug(GlificWeb.ContextPlug)
   end
 
-  # Glific Default Route
+  pipeline :api_graphql do
+    # plug(Pow.Plug.RequireAuthenticated, error_handler: GlificWeb.APIAuthErrorHandler)
+    plug(GlificWeb.ContextPlug)
+  end
+
   scope "/", GlificWeb do
     pipe_through(:browser)
 
@@ -179,7 +183,8 @@ defmodule GlificWeb.Router do
 
   if Mix.env() in [:dev, :test] do
     scope "/" do
-      pipe_through([:api, :api_protected])
+      # pipe_through([:api, :api_protected])
+      pipe_through([:api, :api_graphql])
 
       forward(
         "/graphiql",
